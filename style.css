@@ -1,0 +1,85 @@
+/* Notions färgpalett och variabler */
+:root {
+  --bg-color: #ffffff;
+  --text-main: #37352f;
+  --text-muted: rgba(55, 53, 47, 0.65);
+  --border-color: #e9e9e7;
+  --hover-bg: rgba(55, 53, 47, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  /* Notions systemtypsnitt-stack */
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  line-height: 1.5;
+}
+
+.notion-container {
+  width: 100%;
+  max-width: 700px; /* Samma bredd som en standard Notion-sida */
+}
+
+/* Header */
+.page-header {
+  margin-bottom: 40px;
+}
+
+.icon {
+  font-size: 78px;
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* Veckodagarna */
+.day-block {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.day-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Stil för input-fältet så det ser ut som vanlig text */
+textarea {
+  width: 100%;
+  min-height: 28px; /* Bara en rad från början */
+  background-color: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 16px;
+  font-family: inherit;
+  resize: none; /* Stänger av den fula drag-rutan */
+  overflow: hidden; /* Döljer scrollbaren för auto-resize */
+  padding: 4px 0;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+textarea::placeholder {
+  color: var(--text-muted);
+}
