@@ -3,18 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Veckoplanering</title>
+  <title>Ghost Mode</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="notion-container">
     <header class="page-header">
-      <div class="icon">🗓️</div>
-      <h1 class="title">Veckoplanering</h1>
+      <h1 class="title">Ghost Mode</h1>
     </header>
     
     <div id="planner-container"></div>
+
+    <div class="habit-section">
+      <h2 class="section-title">DAGLIGA HABITS</h2>
+      
+      <div id="habit-list"></div>
+      
+      <div class="add-habit-container">
+        <input type="text" id="new-habit-input" placeholder="Lägg till habit...">
+        <button id="add-habit-btn">+</button>
+      </div>
+      
+      <div class="heatmap-wrapper">
+        <div id="heatmap" class="heatmap"></div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
