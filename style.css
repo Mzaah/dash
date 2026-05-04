@@ -28,15 +28,14 @@ body {
   max-width: 700px;
 }
 
-/* Header */
-.page-header {
-  margin-bottom: 40px;
-}
-
-.title {
-  font-size: 40px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+/* Sektionstitlar */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
 }
 
 /* Veckoplaneraren */
@@ -76,30 +75,25 @@ textarea::placeholder {
   color: var(--text-muted);
 }
 
-/* HABIT TRACKER STYLING */
+/* LISTOR (Används för både Todo och Habits) */
+.todo-section {
+  margin-bottom: 20px;
+}
+
 .habit-section {
   margin-top: 60px;
   padding-top: 30px;
+  border-top: 1px solid var(--border-color);
 }
 
-.section-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 1.5px;
-  margin-bottom: 16px;
-  text-transform: uppercase;
-}
-
-.habit-item {
+.list-item {
   display: flex;
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Checkbox design enligt bilden */
-.habit-checkbox {
+.list-checkbox {
   width: 22px;
   height: 22px;
   margin-right: 14px;
@@ -113,12 +107,12 @@ textarea::placeholder {
   flex-shrink: 0;
 }
 
-.habit-checkbox:checked {
+.list-checkbox:checked {
   background-color: #239a3b;
   border-color: #239a3b;
 }
 
-.habit-checkbox:checked::after {
+.list-checkbox:checked::after {
   content: '';
   position: absolute;
   left: 6px;
@@ -130,19 +124,19 @@ textarea::placeholder {
   transform: rotate(45deg);
 }
 
-.habit-text {
+.list-text {
   flex-grow: 1;
   font-size: 16px;
   color: var(--text-main);
 }
 
 /* Stryk över texten när den är klar */
-.habit-item.checked .habit-text {
+.list-item.checked .list-text {
   text-decoration: line-through;
   color: var(--text-muted);
 }
 
-.habit-delete {
+.list-delete {
   color: #999;
   cursor: pointer;
   font-size: 16px;
@@ -152,18 +146,18 @@ textarea::placeholder {
   font-family: monospace;
 }
 
-.habit-delete:hover {
+.list-delete:hover {
   color: #333;
 }
 
-/* Input för nya habits */
+/* Input för nya list-items */
 .add-habit-container {
   display: flex;
   margin-top: 16px;
   gap: 12px;
 }
 
-#new-habit-input {
+.add-habit-container input {
   flex-grow: 1;
   padding: 10px 12px;
   border: 1px solid var(--border-color);
@@ -173,7 +167,7 @@ textarea::placeholder {
   background: transparent;
 }
 
-#add-habit-btn {
+.add-habit-container button {
   width: 42px;
   height: 42px;
   background: transparent;
@@ -205,12 +199,24 @@ textarea::placeholder {
 .heatmap-cell {
   width: 12px;
   height: 12px;
-  background-color: #ebedf0; /* Standard grå = inget gjort */
+  background-color: #ebedf0;
   border-radius: 2px;
 }
 
-/* Färgskalan (samma som Anki/GitHub) */
-.color-1 { background-color: #c6e48b; } /* 1-25% */
-.color-2 { background-color: #7bc96f; } /* 26-50% */
-.color-3 { background-color: #239a3b; } /* 51-75% */
-.color-4 { background-color: #196127; } /* 76-100% */
+.color-1 { background-color: #c6e48b; }
+.color-2 { background-color: #7bc96f; }
+.color-3 { background-color: #239a3b; }
+.color-4 { background-color: #196127; }
+
+/* BÖN STYLING */
+.prayer-section {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.8;
+  font-style: italic;
+  padding-bottom: 40px;
+}
