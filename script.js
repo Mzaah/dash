@@ -1,6 +1,90 @@
+// --- HJÄLPFUNKTIONER ---
+function getLocalDayString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const todayStr = getLocalDayString(new Date());
+
+
+// --- TO-DO LISTA LOGIK ---
+let todos = JSON.parse(localStorage.getItem('ghost_todos')) || [];
+let lastTodoDate = localStorage.getItem('ghost_todo_date');
+
+// Om det är en ny dag, töm to-do listan
+if (lastTodoDate !== todayStr) {
+  todos = [];
+  localStorage.setItem('ghost_todos', JSON.stringify(todos));
+  localStorage.setItem('ghost_todo_date', todayStr);
+}
+
+function saveTodos() {
+  localStorage.setItem('ghost_todos', JSON.stringify(todos));
+}
+
+function renderTodos() {
+  const list = document.getElementById('todo-list');
+  list.innerHTML = '';
+  
+  todos.forEach((todo, index) => {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    if(todo.checked) item.classList.add('checked');
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'list-checkbox';
+    checkbox.checked = todo.checked;
+    
+    checkbox.addEventListener('change', (e) => {
+      todo.checked = e.target.checked;
+      if(todo.checked) item.classList.add('checked');
+      else item.classList.remove('checked');
+      saveTodos();
+    });
+    
+    const text = document.createElement('span');
+    text.className = 'list-text';
+    text.textContent = todo.text;
+    
+    const delBtn = document.createElement('button');
+    delBtn.className = 'list-delete';
+    delBtn.textContent = '×';
+    delBtn.addEventListener('click', () => {
+      todos.splice(index, 1);
+      saveTodos();
+      renderTodos();
+    });
+    
+    item.appendChild(checkbox);
+    item.appendChild(text);
+    item.appendChild(delBtn);
+    list.appendChild(item);
+  });
+}
+
+document.getElementById('add-todo-btn').addEventListener('click', addTodo);
+document.getElementById('new-todo-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addTodo();
+});
+
+function addTodo() {
+  const input = document.getElementById('new-todo-input');
+  const val = input.value.trim();
+  if (val) {
+    todos.push({ text: val, checked: false });
+    saveTodos();
+    renderTodos();
+    input.value = '';
+  }
+}
+
+
 // --- VECKOPLANERARE LOGIK ---
 const DAYS = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'];
-const container = document.getElementById('planner-container');
+const plannerContainer = document.getElementById('planner-container');
 
 function autoResize(textarea) {
   textarea.style.height = 'auto';
@@ -33,29 +117,18 @@ function initializePlanner() {
 
     block.appendChild(title);
     block.appendChild(textarea);
-    container.appendChild(block);
+    plannerContainer.appendChild(block);
   });
 }
+
 
 // --- HABIT TRACKER & HEATMAP LOGIK ---
 let habits = JSON.parse(localStorage.getItem('ghost_habits')) || ['Träning', 'Läsa 30 min'];
 let habitData = JSON.parse(localStorage.getItem('ghost_habit_data')) || {};
 
-// Få dagens datum i formatet YYYY-MM-DD anpassat till lokal tidzon
-function getLocalDayString(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-const todayStr = getLocalDayString(new Date());
-
-// Se till att dagens data finns
 if (!habitData[todayStr]) {
   habitData[todayStr] = { checked: [], total: habits.length };
 } else {
-  // Uppdatera totalen om vi lagt till/tagit bort habits
   habitData[todayStr].total = habits.length; 
 }
 
@@ -65,21 +138,20 @@ function saveHabitData() {
   renderHeatmap();
 }
 
-// Rendera habit listan för DAGEN
 function renderHabits() {
   const list = document.getElementById('habit-list');
   list.innerHTML = '';
   
   habits.forEach((habit, index) => {
     const item = document.createElement('div');
-    item.className = 'habit-item';
+    item.className = 'list-item';
     
     const isChecked = habitData[todayStr].checked.includes(habit);
     if(isChecked) item.classList.add('checked');
     
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.className = 'habit-checkbox';
+    checkbox.className = 'list-checkbox';
     checkbox.checked = isChecked;
     
     checkbox.addEventListener('change', (e) => {
@@ -96,14 +168,13 @@ function renderHabits() {
     });
     
     const text = document.createElement('span');
-    text.className = 'habit-text';
+    text.className = 'list-text';
     text.textContent = habit;
     
     const delBtn = document.createElement('button');
-    delBtn.className = 'habit-delete';
+    delBtn.className = 'list-delete';
     delBtn.textContent = '×';
     delBtn.addEventListener('click', () => {
-      // Ta bort från listan och spara om
       habits.splice(index, 1);
       habitData[todayStr].checked = habitData[todayStr].checked.filter(h => h !== habit);
       habitData[todayStr].total = habits.length;
@@ -118,11 +189,7 @@ function renderHabits() {
   });
 }
 
-// Hantera input för nya habits
-document.getElementById('add-habit-btn').addEventListener('click', () => {
-  addHabit();
-});
-
+document.getElementById('add-habit-btn').addEventListener('click', addHabit);
 document.getElementById('new-habit-input').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addHabit();
 });
@@ -139,21 +206,18 @@ function addHabit() {
   }
 }
 
-// Rendera Heatmapen
 function renderHeatmap() {
   const heatmap = document.getElementById('heatmap');
   heatmap.innerHTML = '';
   
-  const numDays = 364; // Visar ungefär ett års data
+  const numDays = 364; 
   const today = new Date();
   
-  // Justera så att första dagen i grid-systemet matchar rätt veckodag (måndag i toppen)
   const firstDate = new Date(today);
   firstDate.setDate(today.getDate() - numDays);
   let startDay = firstDate.getDay(); 
-  startDay = startDay === 0 ? 6 : startDay - 1; // 0 = Mån, 6 = Sön
+  startDay = startDay === 0 ? 6 : startDay - 1; 
   
-  // Lägg till tomma "padding"-block i början för att veckodagarna ska hamna rätt på raderna
   for(let i = 0; i < startDay; i++) {
     const empty = document.createElement('div');
     empty.className = 'heatmap-cell empty';
@@ -161,7 +225,6 @@ function renderHeatmap() {
     heatmap.appendChild(empty);
   }
 
-  // Generera celler för de senaste 365 dagarna (vänster till höger, uppifrån och ner)
   for (let i = numDays; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(today.getDate() - i);
@@ -169,13 +232,12 @@ function renderHeatmap() {
     
     const cell = document.createElement('div');
     cell.className = 'heatmap-cell';
-    cell.title = dateStr; // Ger tooltip med datum om man håller musen över
+    cell.title = dateStr; 
     
     const data = habitData[dateStr];
     if (data && data.total > 0) {
       const percentage = data.checked.length / data.total;
       
-      // Bestäm nyansen av grönt beroende på procent
       if (percentage > 0) {
         if (percentage <= 0.25) cell.classList.add('color-1');
         else if (percentage <= 0.5) cell.classList.add('color-2');
@@ -186,12 +248,12 @@ function renderHeatmap() {
     heatmap.appendChild(cell);
   }
 
-  // Scrolla automatiskt längst till höger för att visa "idag"
   const wrapper = document.querySelector('.heatmap-wrapper');
   wrapper.scrollLeft = wrapper.scrollWidth;
 }
 
-// Starta allting när sidan laddas
+// Starta appen
+renderTodos();
 initializePlanner();
 renderHabits();
 renderHeatmap();
