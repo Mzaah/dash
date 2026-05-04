@@ -9,10 +9,18 @@
 <body>
 
   <div class="notion-container">
-    <header class="page-header">
-      <h1 class="title">Ghost Mode</h1>
-    </header>
     
+    <div class="todo-section">
+      <h2 class="section-title">DAGENS FOKUS</h2>
+      
+      <div id="todo-list"></div>
+      
+      <div class="add-habit-container" style="margin-bottom: 40px;">
+        <input type="text" id="new-todo-input" placeholder="Vad behöver göras idag?">
+        <button id="add-todo-btn">+</button>
+      </div>
+    </div>
+
     <div id="planner-container"></div>
 
     <div class="habit-section">
@@ -29,6 +37,23 @@
         <div id="heatmap" class="heatmap"></div>
       </div>
     </div>
+
+    <div class="prayer-section">
+      <p>
+        Vår Fader, du som är i himlen.<br>
+        Låt ditt namn bli helgat.<br>
+        Låt ditt rike komma.<br>
+        Låt din vilja ske, på jorden så som i himlen.<br>
+        Ge oss idag det bröd vi behöver.<br>
+        Och förlåt oss våra skulder, liksom vi har förlåtit dem som står i skuld till oss.<br>
+        Och utsätt oss inte för prövning,<br>
+        utan rädda oss från det onda.<br>
+        Ditt är riket, din är makten och äran,<br>
+        i evighet.<br>
+        Amen.
+      </p>
+    </div>
+
   </div>
 
   <script src="script.js"></script>
