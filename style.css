@@ -28,7 +28,6 @@ body {
   max-width: 700px;
 }
 
-/* Sektionstitlar */
 .section-title {
   font-size: 13px;
   font-weight: 600;
@@ -67,24 +66,12 @@ textarea {
   padding: 4px 0;
 }
 
-textarea:focus {
-  outline: none;
-}
+textarea:focus { outline: none; }
+textarea::placeholder { color: var(--text-muted); }
 
-textarea::placeholder {
-  color: var(--text-muted);
-}
-
-/* LISTOR (Används för både Todo och Habits) */
-.todo-section {
-  margin-bottom: 20px;
-}
-
-.habit-section {
-  margin-top: 60px;
-  padding-top: 30px;
-  border-top: 1px solid var(--border-color);
-}
+/* LISTOR (Todo och Habits) */
+.todo-section { margin-bottom: 20px; }
+.habit-section { margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border-color); }
 
 .list-item {
   display: flex;
@@ -107,11 +94,7 @@ textarea::placeholder {
   flex-shrink: 0;
 }
 
-.list-checkbox:checked {
-  background-color: #239a3b;
-  border-color: #239a3b;
-}
-
+.list-checkbox:checked { background-color: #239a3b; border-color: #239a3b; }
 .list-checkbox:checked::after {
   content: '';
   position: absolute;
@@ -124,99 +107,96 @@ textarea::placeholder {
   transform: rotate(45deg);
 }
 
-.list-text {
-  flex-grow: 1;
-  font-size: 16px;
-  color: var(--text-main);
-}
-
-/* Stryk över texten när den är klar */
-.list-item.checked .list-text {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
+.list-text { flex-grow: 1; font-size: 16px; color: var(--text-main); }
+.list-item.checked .list-text { text-decoration: line-through; color: var(--text-muted); }
 
 .list-delete {
-  color: #999;
-  cursor: pointer;
-  font-size: 16px;
-  background: none;
-  border: none;
-  padding: 0 5px;
-  font-family: monospace;
+  color: #999; cursor: pointer; font-size: 16px; background: none;
+  border: none; padding: 0 5px; font-family: monospace;
 }
+.list-delete:hover { color: #333; }
 
-.list-delete:hover {
-  color: #333;
-}
-
-/* Input för nya list-items */
-.add-habit-container {
-  display: flex;
-  margin-top: 16px;
-  gap: 12px;
-}
-
+/* Input fält */
+.add-habit-container { display: flex; margin-top: 16px; gap: 12px; }
 .add-habit-container input {
-  flex-grow: 1;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 16px;
-  outline: none;
-  background: transparent;
+  flex-grow: 1; padding: 10px 12px; border: 1px solid var(--border-color);
+  border-radius: 6px; font-size: 16px; outline: none; background: transparent;
 }
-
 .add-habit-container button {
-  width: 42px;
-  height: 42px;
-  background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-main);
+  width: 42px; height: 42px; background: transparent; border: 1px solid var(--border-color);
+  border-radius: 6px; font-size: 20px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; color: var(--text-main);
 }
 
-/* HEATMAP STYLING */
-.heatmap-wrapper {
-  margin-top: 40px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.heatmap {
-  display: grid;
-  grid-template-rows: repeat(7, 12px);
-  grid-auto-flow: column;
-  gap: 3px;
-  width: max-content;
-}
-
-.heatmap-cell {
-  width: 12px;
-  height: 12px;
-  background-color: #ebedf0;
-  border-radius: 2px;
-}
-
+/* HEATMAP */
+.heatmap-wrapper { margin-top: 40px; overflow-x: auto; padding-bottom: 10px; }
+.heatmap { display: grid; grid-template-rows: repeat(7, 12px); grid-auto-flow: column; gap: 3px; width: max-content; }
+.heatmap-cell { width: 12px; height: 12px; background-color: #ebedf0; border-radius: 2px; }
 .color-1 { background-color: #c6e48b; }
 .color-2 { background-color: #7bc96f; }
 .color-3 { background-color: #239a3b; }
 .color-4 { background-color: #196127; }
 
-/* BÖN STYLING */
-.prayer-section {
-  margin-top: 60px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border-color);
-  text-align: center;
+/* STATS SEKTION (Ny) */
+.stats-section {
+  display: flex;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.stat-box {
+  flex: 1;
+  background-color: #f7f7f5;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-label {
+  font-size: 13px;
   color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.8;
-  font-style: italic;
-  padding-bottom: 40px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background-color: #e9e9e7;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: auto;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--text-main);
+  width: 0%;
+  transition: width 1s ease-out;
+}
+
+/* SKÄRMTID */
+.screentime-section {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f7f7f5;
+  border-radius: 8px;
+}
+.screentime-input-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+#screentime-input { width: 70px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; text-align: center; background: white;}
+#save-screentime { background: var(--text-main); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+.status-text { font-size: 13px; margin-top: 12px; font-weight: 500; }
+
+/* BÖN */
+.prayer-section {
+  margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border-color);
+  text-align: center; color: var(--text-muted); font-size: 14px; line-height: 1.8;
+  font-style: italic; padding-bottom: 40px;
 }
