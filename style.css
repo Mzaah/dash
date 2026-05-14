@@ -137,7 +137,7 @@ textarea::placeholder { color: var(--text-muted); }
 .color-3 { background-color: #239a3b; }
 .color-4 { background-color: #196127; }
 
-/* STATS SEKTION (Ny) */
+/* STATS SEKTION */
 .stats-section {
   display: flex;
   gap: 16px;
@@ -181,18 +181,6 @@ textarea::placeholder { color: var(--text-muted); }
   width: 0%;
   transition: width 1s ease-out;
 }
-
-/* SKÄRMTID */
-.screentime-section {
-  margin-top: 40px;
-  padding: 20px;
-  background-color: #f7f7f5;
-  border-radius: 8px;
-}
-.screentime-input-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-#screentime-input { width: 70px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; text-align: center; background: white;}
-#save-screentime { background: var(--text-main); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
-.status-text { font-size: 13px; margin-top: 12px; font-weight: 500; }
 
 /* BÖN */
 .prayer-section {
