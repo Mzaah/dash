@@ -133,7 +133,7 @@ function saveHabitData() {
   localStorage.setItem('ghost_habits', JSON.stringify(habits));
   localStorage.setItem('ghost_habit_data', JSON.stringify(habitData));
   renderHeatmap();
-  updateStats(); // Uppdatera streaken när du bockar i en habit
+  updateStats();
 }
 
 function renderHabits() {
@@ -246,39 +246,8 @@ function renderHeatmap() {
 }
 
 
-// --- SKÄRMTID LOGIK ---
-const screentimeInput = document.getElementById('screentime-input');
-const saveScreentimeBtn = document.getElementById('save-screentime');
-const screentimeStatus = document.getElementById('screentime-status');
-
-const savedScreentime = localStorage.getItem(`screentime_${todayStr}`);
-if (savedScreentime) {
-  screentimeInput.value = savedScreentime;
-  updateScreentimeStatus(savedScreentime);
-}
-
-saveScreentimeBtn.addEventListener('click', () => {
-  const val = screentimeInput.value;
-  if (val !== "") {
-    localStorage.setItem(`screentime_${todayStr}`, val);
-    updateScreentimeStatus(val);
-  }
-});
-
-function updateScreentimeStatus(val) {
-  if (val > 3) {
-    screentimeStatus.textContent = "Status: Över gränsen. Fokusera om.";
-    screentimeStatus.style.color = "#d44c47"; 
-  } else {
-    screentimeStatus.textContent = "Status: Inom målet. Bra jobbat.";
-    screentimeStatus.style.color = "#239a3b"; 
-  }
-}
-
-
 // --- STATS LOGIK (År & Streak) ---
 function updateStats() {
-  // Beräkna Årets Progress
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 1);
   const end = new Date(now.getFullYear() + 1, 0, 1);
@@ -287,12 +256,10 @@ function updateStats() {
   document.getElementById('year-percent').textContent = percent.toFixed(1) + '%';
   document.getElementById('year-label').textContent = `av ${now.getFullYear()} avklarat`;
   
-  // Timeout för att CSS-animationen ska hinna registreras när sidan laddas
   setTimeout(() => {
     document.getElementById('year-progress-fill').style.width = percent + '%';
   }, 100);
 
-  // Beräkna Streak
   let currentStreak = 0;
   const today = new Date();
   
@@ -303,15 +270,13 @@ function updateStats() {
     
     const data = habitData[dateStr];
     
-    // Om du har bockat i minst EN habit räknas dagen som aktiv (ändra > 0 till == data.total för 100% krav)
     if (data && data.checked && data.checked.length > 0) {
       currentStreak++;
     } else {
-      // Om det är idag och ingenting är gjort än, bryt inte gårdagens streak
       if (i === 0) {
         continue;
       } else {
-        break; // Kedjan är bruten
+        break; 
       }
     }
   }
