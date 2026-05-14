@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ghost Mode</title>
+  <title></title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,9 +12,7 @@
     
     <div class="todo-section">
       <h2 class="section-title">DAGENS FOKUS</h2>
-      
       <div id="todo-list"></div>
-      
       <div class="add-habit-container" style="margin-bottom: 40px;">
         <input type="text" id="new-todo-input" placeholder="Vad behöver göras idag?">
         <button id="add-todo-btn">+</button>
@@ -36,6 +34,30 @@
       <div class="heatmap-wrapper">
         <div id="heatmap" class="heatmap"></div>
       </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stat-box">
+        <span class="stat-value" id="streak-counter">0</span>
+        <span class="stat-label">Dagar i rad (Streak)</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value" id="year-percent">0%</span>
+        <span class="stat-label" id="year-label">av året avklarat</span>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="year-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screentime-section">
+      <h2 class="section-title">SKÄRMTID</h2>
+      <div class="screentime-input-wrapper">
+        <input type="number" id="screentime-input" placeholder="0" step="0.1">
+        <span>timmar idag</span>
+        <button id="save-screentime">Spara</button>
+      </div>
+      <p id="screentime-status" class="status-text"></p>
     </div>
 
     <div class="prayer-section">
