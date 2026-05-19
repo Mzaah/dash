@@ -5,65 +5,123 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title></title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
   <div class="notion-container">
     
-    <div class="todo-section">
-      <h2 class="section-title">DAGENS FOKUS</h2>
-      <div id="todo-list"></div>
-      <div class="add-habit-container" style="margin-bottom: 40px;">
-        <input type="text" id="new-todo-input" placeholder="Vad behöver göras idag?">
-        <button id="add-todo-btn">+</button>
-      </div>
+    <h1 id="greeting-title" class="greeting-title"></h1>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-target="tab-dashboard">Dashboard</button>
+      <button class="tab-btn" data-target="tab-ideas">Projekt & Idéer</button>
+      <button class="tab-btn" data-target="tab-health">Hälsa</button>
     </div>
 
-    <div id="planner-container"></div>
-
-    <div class="habit-section">
-      <h2 class="section-title">DAGLIGA HABITS</h2>
+    <div id="tab-dashboard" class="tab-content active">
       
-      <div id="habit-list"></div>
-      
-      <div class="add-habit-container">
-        <input type="text" id="new-habit-input" placeholder="Lägg till habit...">
-        <button id="add-habit-btn">+</button>
-      </div>
-      
-      <div class="heatmap-wrapper">
-        <div id="heatmap" class="heatmap"></div>
-      </div>
-    </div>
-
-    <div class="stats-section">
-      <div class="stat-box">
-        <span class="stat-value" id="streak-counter">0</span>
-        <span class="stat-label">Dagar i rad (Streak)</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-value" id="year-percent">0%</span>
-        <span class="stat-label" id="year-label">av året avklarat</span>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="year-progress-fill"></div>
+      <div class="todo-section">
+        <h2 class="section-title">DAGENS FOKUS</h2>
+        <div id="todo-list"></div>
+        <div class="add-habit-container" style="margin-bottom: 40px;">
+          <input type="text" id="new-todo-input" placeholder="Vad behöver göras idag?">
+          <button id="add-todo-btn">+</button>
         </div>
       </div>
+
+      <div class="habit-section">
+        <h2 class="section-title">DAGLIGA HABITS</h2>
+        <div id="habit-list"></div>
+        <div class="add-habit-container">
+          <input type="text" id="new-habit-input" placeholder="Lägg till habit...">
+          <button id="add-habit-btn">+</button>
+        </div>
+        <div class="heatmap-wrapper">
+          <div id="heatmap" class="heatmap"></div>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <div class="stat-box">
+          <span class="stat-value" id="streak-counter">0</span>
+          <span class="stat-label">Dagar i rad (Streak)</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-value" id="year-percent">0%</span>
+          <span class="stat-label" id="year-label">av året avklarat</span>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="year-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 40px;">
+        <h2 class="section-title" style="margin-bottom: 12px;">VECKOPLANERARE</h2>
+        <div id="planner-container"></div>
+      </div>
+
+      <div class="prayer-section">
+        <p>
+          Vår Fader, du som är i himlen.<br>
+          Låt ditt namn bli helgat.<br>
+          Låt ditt rike komma.<br>
+          Låt din vilja ske, på jorden så som i himlen.<br>
+          Ge oss idag det bröd vi behöver.<br>
+          Och förlåt oss våra skulder, liksom vi har förlåtit dem som står i skuld till oss.<br>
+          Och utsätt oss inte för prövning,<br>
+          utan rädda oss från det onda.<br>
+          Ditt är riket, din är makten och äran,<br>
+          i evighet.<br>
+          Amen.
+        </p>
+      </div>
     </div>
 
-    <div class="prayer-section">
-      <p>
-        Vår Fader, du som är i himlen.<br>
-        Låt ditt namn bli helgat.<br>
-        Låt ditt rike komma.<br>
-        Låt din vilja ske, på jorden så som i himlen.<br>
-        Ge oss idag det bröd vi behöver.<br>
-        Och förlåt oss våra skulder, liksom vi har förlåtit dem som står i skuld till oss.<br>
-        Och utsätt oss inte för prövning,<br>
-        utan rädda oss från det onda.<br>
-        Ditt är riket, din är makten och äran,<br>
-        i evighet.<br>
-        Amen.
-      </p>
+    <div id="tab-ideas" class="tab-content">
+      
+      <div class="idea-section">
+        <h2 class="section-title">DRAKENBERG</h2>
+        <div id="list-drakenberg"></div>
+        <div class="add-habit-container">
+          <input type="text" id="input-drakenberg" placeholder="Ny idé för Drakenberg...">
+          <button id="add-drakenberg-btn">+</button>
+        </div>
+      </div>
+
+      <div class="idea-section">
+        <h2 class="section-title">INES</h2>
+        <div id="list-ines"></div>
+        <div class="add-habit-container">
+          <input type="text" id="input-ines" placeholder="Ny idé för Ines...">
+          <button id="add-ines-btn">+</button>
+        </div>
+      </div>
+
+      <div class="idea-section">
+        <h2 class="section-title">ISK</h2>
+        <div id="list-isk"></div>
+        <div class="add-habit-container">
+          <input type="text" id="input-isk" placeholder="Ny idé för ISK...">
+          <button id="add-isk-btn">+</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="tab-health" class="tab-content">
+      <div class="idea-section">
+        <h2 class="section-title">VIKTUTVECKLING</h2>
+
+        <div class="chart-container">
+          <canvas id="weightChart"></canvas>
+        </div>
+        
+        <div class="add-habit-container" style="margin-bottom: 24px;">
+          <input type="number" id="new-weight-input" placeholder="Skriv in din vikt i kg (t.ex. 80.5)" step="0.1">
+          <button id="add-weight-btn">+</button>
+        </div>
+      </div>
     </div>
 
   </div>
