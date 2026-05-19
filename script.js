@@ -5,9 +5,35 @@ function getLocalDayString(date) {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-
 const todayStr = getLocalDayString(new Date());
 
+// --- DYNAMISK HÄLSNING ---
+function updateGreeting() {
+  const hour = new Date().getHours();
+  const greetingEl = document.getElementById('greeting-title');
+  if (hour < 10) {
+    greetingEl.textContent = "God morgon, Liam. 🙏";
+  } else if (hour < 18) {
+    greetingEl.textContent = "God dag, Liam. 🙏";
+  } else {
+    greetingEl.textContent = "God kväll, Liam. 🙏";
+  }
+}
+
+// --- FLIKAR (TABS) LOGIK ---
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
+    
+    // Rita upp grafen när man klickar på Hälsa-fliken för att undvika grafikbuggar
+    if (btn.dataset.target === 'tab-health') {
+      renderWeightChart();
+    }
+  });
+});
 
 // --- TO-DO LISTA LOGIK ---
 let todos = JSON.parse(localStorage.getItem('ghost_todos')) || [];
@@ -24,7 +50,6 @@ function saveTodos() { localStorage.setItem('ghost_todos', JSON.stringify(todos)
 function renderTodos() {
   const list = document.getElementById('todo-list');
   list.innerHTML = '';
-  
   todos.forEach((todo, index) => {
     const item = document.createElement('div');
     item.className = 'list-item';
@@ -78,7 +103,6 @@ function addTodo() {
   }
 }
 
-
 // --- VECKOPLANERARE LOGIK ---
 const DAYS = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'];
 const plannerContainer = document.getElementById('planner-container');
@@ -118,16 +142,12 @@ function initializePlanner() {
   });
 }
 
-
 // --- HABIT TRACKER & HEATMAP LOGIK ---
 let habits = JSON.parse(localStorage.getItem('ghost_habits')) || ['Träning', 'Läsning'];
 let habitData = JSON.parse(localStorage.getItem('ghost_habit_data')) || {};
 
-if (!habitData[todayStr]) {
-  habitData[todayStr] = { checked: [], total: habits.length };
-} else {
-  habitData[todayStr].total = habits.length; 
-}
+if (!habitData[todayStr]) { habitData[todayStr] = { checked: [], total: habits.length }; } 
+else { habitData[todayStr].total = habits.length; }
 
 function saveHabitData() {
   localStorage.setItem('ghost_habits', JSON.stringify(habits));
@@ -139,7 +159,6 @@ function saveHabitData() {
 function renderHabits() {
   const list = document.getElementById('habit-list');
   list.innerHTML = '';
-  
   habits.forEach((habit, index) => {
     const item = document.createElement('div');
     item.className = 'list-item';
@@ -206,7 +225,6 @@ function renderHeatmap() {
   
   const numDays = 364; 
   const today = new Date();
-  
   const firstDate = new Date(today);
   firstDate.setDate(today.getDate() - numDays);
   let startDay = firstDate.getDay(); 
@@ -240,13 +258,11 @@ function renderHeatmap() {
     }
     heatmap.appendChild(cell);
   }
-
   const wrapper = document.querySelector('.heatmap-wrapper');
   wrapper.scrollLeft = wrapper.scrollWidth;
 }
 
-
-// --- STATS LOGIK (År & Streak) ---
+// --- STATS LOGIK ---
 function updateStats() {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 1);
@@ -256,38 +272,181 @@ function updateStats() {
   document.getElementById('year-percent').textContent = percent.toFixed(1) + '%';
   document.getElementById('year-label').textContent = `av ${now.getFullYear()} avklarat`;
   
-  setTimeout(() => {
-    document.getElementById('year-progress-fill').style.width = percent + '%';
-  }, 100);
+  setTimeout(() => { document.getElementById('year-progress-fill').style.width = percent + '%'; }, 100);
 
   let currentStreak = 0;
   const today = new Date();
-  
   for (let i = 0; i < 365; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() - i);
     const dateStr = getLocalDayString(d);
-    
     const data = habitData[dateStr];
     
     if (data && data.checked && data.checked.length > 0) {
       currentStreak++;
     } else {
-      if (i === 0) {
-        continue;
-      } else {
-        break; 
-      }
+      if (i === 0) continue;
+      else break; 
     }
   }
-  
   document.getElementById('streak-counter').textContent = currentStreak;
 }
 
+// --- IDÉ & PROJEKT LOGIK ---
+const ideaCategories = ['drakenberg', 'ines', 'isk'];
+let projectIdeas = JSON.parse(localStorage.getItem('ghost_project_ideas')) || { drakenberg: [], ines: [], isk: [] };
+
+function saveIdeas() {
+  localStorage.setItem('ghost_project_ideas', JSON.stringify(projectIdeas));
+}
+
+function renderIdeas() {
+  ideaCategories.forEach(cat => {
+    const list = document.getElementById(`list-${cat}`);
+    list.innerHTML = '';
+    projectIdeas[cat].forEach((idea, index) => {
+      const item = document.createElement('div');
+      item.className = 'list-item'; 
+      
+      const text = document.createElement('span');
+      text.className = 'list-text';
+      text.textContent = idea;
+      
+      const delBtn = document.createElement('button');
+      delBtn.className = 'list-delete';
+      delBtn.textContent = '×';
+      delBtn.addEventListener('click', () => {
+        projectIdeas[cat].splice(index, 1);
+        saveIdeas();
+        renderIdeas();
+      });
+      
+      item.appendChild(text);
+      item.appendChild(delBtn);
+      list.appendChild(item);
+    });
+  });
+}
+
+function setupIdeaInputs() {
+  ideaCategories.forEach(cat => {
+    const btn = document.getElementById(`add-${cat}-btn`);
+    const input = document.getElementById(`input-${cat}`);
+    
+    const addIdea = () => {
+      const val = input.value.trim();
+      if (val) {
+        projectIdeas[cat].push(val);
+        saveIdeas();
+        renderIdeas();
+        input.value = '';
+      }
+    };
+    
+    btn.addEventListener('click', addIdea);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addIdea();
+    });
+  });
+}
+
+// --- VIKT OCH HÄLSA (CHART.JS) LOGIK ---
+let weightData = JSON.parse(localStorage.getItem('ghost_weight_data')) || [];
+let weightChartInstance = null;
+
+function saveWeightData() {
+  localStorage.setItem('ghost_weight_data', JSON.stringify(weightData));
+}
+
+function renderWeightChart() {
+  const ctx = document.getElementById('weightChart').getContext('2d');
+  
+  const labels = weightData.map(d => d.date);
+  const data = weightData.map(d => d.weight);
+
+  // Om grafen redan finns, ta bort den innan vi ritar om
+  if (weightChartInstance) {
+    weightChartInstance.destroy();
+  }
+
+  // Konfigurera färgerna för vårt Dark Mode
+  Chart.defaults.color = '#8e8a86';
+  Chart.defaults.font.family = 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif';
+
+  weightChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Vikt (kg)',
+        data: data,
+        borderColor: '#3dd68c', // Grön accentfärg
+        backgroundColor: 'rgba(61, 214, 140, 0.1)',
+        borderWidth: 2,
+        pointBackgroundColor: '#1c1a19',
+        pointBorderColor: '#3dd68c',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        fill: true,
+        tension: 0.3 // Mjuka kurvor
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: '#2c2927' }
+        },
+        x: {
+          grid: { display: false }
+        }
+      },
+      plugins: {
+        legend: { display: false } // Gömmer legend-boxen för en cleanare look
+      }
+    }
+  });
+}
+
+document.getElementById('add-weight-btn').addEventListener('click', addWeight);
+document.getElementById('new-weight-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addWeight();
+});
+
+function addWeight() {
+  const input = document.getElementById('new-weight-input');
+  // Ersätter kommatecken med punkt utifall man skriver med svenskt format (ex 80,5)
+  const val = parseFloat(input.value.replace(',', '.')); 
+  
+  if (!isNaN(val)) {
+    const now = new Date();
+    const dateStr = getLocalDayString(now);
+    
+    // Kollar om det redan finns en vikt inlagd idag, då uppdaterar vi bara den
+    const existingIndex = weightData.findIndex(d => d.date === dateStr);
+    if (existingIndex !== -1) {
+      weightData[existingIndex].weight = val;
+    } else {
+      weightData.push({ date: dateStr, weight: val });
+    }
+    
+    // Sortera efter datum ifall något blivit fel
+    weightData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    saveWeightData();
+    renderWeightChart();
+    input.value = '';
+  }
+}
 
 // --- STARTA APPEN ---
+updateGreeting();
 renderTodos();
 initializePlanner();
 renderHabits();
 renderHeatmap();
 updateStats();
+renderIdeas();
+setupIdeaInputs();
