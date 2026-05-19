@@ -1,190 +1,158 @@
-/* Grundläggande Notion-variabler */
+/* Premium Dark Mode */
 :root {
-  --bg-color: #ffffff;
-  --text-main: #37352f;
-  --text-muted: rgba(55, 53, 47, 0.65);
-  --border-color: #e9e9e7;
-  --hover-bg: rgba(55, 53, 47, 0.08);
+  --bg-color: #131211;
+  --card-bg: #1c1a19;
+  --text-main: #f5f5f3;
+  --text-muted: #8e8a86;
+  --border-color: #2c2927;
+  --hover-bg: #282523;
+  
+  --accent-green: #3dd68c;
+  --accent-orange: #ff9040;
+  
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: var(--bg-color);
+  background-color: #131211; 
+  background-image: linear-gradient(135deg, #1a1918 0%, #100f0e 100%);
+  background-attachment: fixed; 
   font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   color: var(--text-main);
   display: flex;
   justify-content: center;
   padding: 40px 20px;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-.notion-container {
-  width: 100%;
-  max-width: 700px;
+.notion-container { width: 100%; max-width: 650px; }
+
+/* DYNAMISK HÄLSNING */
+.greeting-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
 }
+
+/* FLIKAR (TABS) */
+.tabs {
+  display: inline-flex; background-color: var(--card-bg); padding: 6px;
+  border-radius: var(--radius-md); border: 1px solid var(--border-color);
+  margin-bottom: 34px; gap: 4px;
+}
+
+.tab-btn {
+  background: none; border: none; font-size: 14px; color: var(--text-muted);
+  cursor: pointer; padding: 8px 18px; font-weight: 500; border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover { color: var(--text-main); background-color: var(--hover-bg); }
+.tab-btn.active { color: #131211; background-color: #ffffff; font-weight: 600; }
+
+.tab-content { display: none; animation: fadeIn 0.2s ease-out; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
 .section-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 1.5px;
-  margin-bottom: 16px;
-  text-transform: uppercase;
+  font-size: 11px; font-weight: 700; color: var(--accent-orange); 
+  letter-spacing: 1.5px; margin-bottom: 18px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
 }
 
-/* Veckoplaneraren */
+/* VECKOPLANERAREN */
 .day-block {
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-bg); margin-bottom: 14px; padding: 16px;
+  border-radius: var(--radius-md); border: 1px solid var(--border-color);
 }
-
-.day-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.day-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
 
 textarea {
-  width: 100%;
-  min-height: 28px;
-  background-color: transparent;
-  border: none;
-  color: var(--text-main);
-  font-size: 16px;
-  font-family: inherit;
-  resize: none;
-  overflow: hidden;
-  padding: 4px 0;
+  width: 100%; min-height: 28px; background-color: transparent; border: none;
+  color: var(--text-main); font-size: 15px; font-family: inherit; resize: none; overflow: hidden; padding: 2px 0;
 }
-
 textarea:focus { outline: none; }
 textarea::placeholder { color: var(--text-muted); }
 
-/* LISTOR (Todo och Habits) */
-.todo-section { margin-bottom: 20px; }
-.habit-section { margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border-color); }
+/* LISTOR & SEKTIONER */
+.todo-section { margin-bottom: 30px; }
+.habit-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+.idea-section { margin-bottom: 40px; }
 
-.list-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border-color);
-}
+.list-item { display: flex; align-items: center; padding: 14px 4px; border-bottom: 1px solid var(--border-color); }
 
 .list-checkbox {
-  width: 22px;
-  height: 22px;
-  margin-right: 14px;
-  cursor: pointer;
-  border: 1.5px solid #d1d1d1;
-  border-radius: 6px;
-  appearance: none;
-  outline: none;
-  position: relative;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  width: 20px; height: 20px; margin-right: 14px; cursor: pointer;
+  border: 1.5px solid var(--border-color); background-color: var(--card-bg);
+  border-radius: var(--radius-sm); appearance: none; outline: none; position: relative; transition: all 0.15s ease; flex-shrink: 0;
 }
-
-.list-checkbox:checked { background-color: #239a3b; border-color: #239a3b; }
+.list-checkbox:checked { background-color: var(--accent-green); border-color: var(--accent-green); }
 .list-checkbox:checked::after {
-  content: '';
-  position: absolute;
-  left: 6px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 9px;
+  border: solid #131211; border-width: 0 2px 2px 0; transform: rotate(45deg);
 }
 
-.list-text { flex-grow: 1; font-size: 16px; color: var(--text-main); }
+.list-text { flex-grow: 1; font-size: 15px; color: var(--text-main); }
 .list-item.checked .list-text { text-decoration: line-through; color: var(--text-muted); }
 
-.list-delete {
-  color: #999; cursor: pointer; font-size: 16px; background: none;
-  border: none; padding: 0 5px; font-family: monospace;
-}
-.list-delete:hover { color: #333; }
+.list-delete { color: var(--text-muted); cursor: pointer; font-size: 18px; background: none; border: none; padding: 0 8px; opacity: 0.5; transition: opacity 0.2s; }
+.list-delete:hover { opacity: 1; color: #ff5252; }
 
-/* Input fält */
-.add-habit-container { display: flex; margin-top: 16px; gap: 12px; }
+/* INMATNINGSFÄLT OCH KNAPPAR */
+.add-habit-container { display: flex; margin-top: 16px; gap: 10px; }
 .add-habit-container input {
-  flex-grow: 1; padding: 10px 12px; border: 1px solid var(--border-color);
-  border-radius: 6px; font-size: 16px; outline: none; background: transparent;
+  flex-grow: 1; padding: 12px 14px; border: 1px solid var(--border-color);
+  background-color: var(--card-bg); border-radius: var(--radius-md); 
+  font-size: 15px; outline: none; color: var(--text-main); transition: border-color 0.2s;
 }
+.add-habit-container input:focus { border-color: var(--text-muted); }
+
 .add-habit-container button {
-  width: 42px; height: 42px; background: transparent; border: 1px solid var(--border-color);
-  border-radius: 6px; font-size: 20px; cursor: pointer; display: flex;
-  align-items: center; justify-content: center; color: var(--text-main);
+  width: 45px; height: 45px; background-color: var(--card-bg); 
+  border: 1px solid var(--border-color); border-radius: var(--radius-md); 
+  font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-main); transition: all 0.2s;
+}
+.add-habit-container button:hover { background-color: var(--hover-bg); border-color: var(--text-muted); }
+
+/* HÄLSA & CHART */
+.chart-container {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative; 
+  height: 350px; 
+  width: 100%;
 }
 
 /* HEATMAP */
-.heatmap-wrapper { margin-top: 40px; overflow-x: auto; padding-bottom: 10px; }
-.heatmap { display: grid; grid-template-rows: repeat(7, 12px); grid-auto-flow: column; gap: 3px; width: max-content; }
-.heatmap-cell { width: 12px; height: 12px; background-color: #ebedf0; border-radius: 2px; }
-.color-1 { background-color: #c6e48b; }
-.color-2 { background-color: #7bc96f; }
-.color-3 { background-color: #239a3b; }
-.color-4 { background-color: #196127; }
+.heatmap-wrapper { margin-top: 30px; overflow-x: auto; padding-bottom: 10px; }
+.heatmap { display: grid; grid-template-rows: repeat(7, 11px); grid-auto-flow: column; gap: 4px; width: max-content; }
+.heatmap-cell { width: 11px; height: 11px; background-color: #22201e; border-radius: 2px; }
+.color-1 { background-color: #144a29; }
+.color-2 { background-color: #1b7339; }
+.color-3 { background-color: #239a45; }
+.color-4 { background-color: var(--accent-green); }
 
 /* STATS SEKTION */
-.stats-section {
-  display: flex;
-  gap: 16px;
-  margin-top: 40px;
-}
+.stats-section { display: flex; gap: 14px; margin-top: 40px; }
+.stat-box { flex: 1; background-color: var(--card-bg); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+.stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; margin-bottom: 16px; }
+.progress-bar-bg { width: 100%; height: 6px; background-color: #22201e; border-radius: 3px; overflow: hidden; margin-top: auto; }
+.progress-bar-fill { height: 100%; background-color: var(--accent-green); width: 0%; border-radius: 3px; box-shadow: 0 0 8px rgba(61, 214, 140, 0.4); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
 
-.stat-box {
-  flex: 1;
-  background-color: #f7f7f5;
-  padding: 16px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.stat-label {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  margin-bottom: 12px;
-}
-
-.progress-bar-bg {
-  width: 100%;
-  height: 6px;
-  background-color: #e9e9e7;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: auto;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background-color: var(--text-main);
-  width: 0%;
-  transition: width 1s ease-out;
-}
-
-/* BÖN */
+/* BÖN LÄNGST NER */
 .prayer-section {
-  margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border-color);
-  text-align: center; color: var(--text-muted); font-size: 14px; line-height: 1.8;
-  font-style: italic; padding-bottom: 40px;
+  margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color);
+  text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.9;
+  font-style: italic; padding-bottom: 60px; letter-spacing: 0.2px;
 }
