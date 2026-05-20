@@ -4,8 +4,8 @@
 const { createClient } = supabase
 
 const db = createClient(
-  'https://DITT-ID.supabase.co',
-  'DIN-ANON-KEY'
+  'https://xlljzsodolwsqjjitevg.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsbGp6c29kb2x3c3Fqaml0ZXZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMzM1MzgsImV4cCI6MjA5NDgwOTUzOH0.rx7H11JYqUgi74ZVhEbGItu6jlIQE5MlWh0CxPRghlI'
 )
 
 const USER_ID = 'liam'
