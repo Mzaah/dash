@@ -447,7 +447,7 @@ function initializeIdeas() {
       textarea.value = projectIdeas[cat.id] || ''
     }
 
-    setTimeout(() => autoResize(textarea), 0)
+    setTimeout(() => autoResize(textarea), 50)
 
     textarea.addEventListener('input', async (e) => {
       autoResize(e.target)
