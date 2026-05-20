@@ -188,7 +188,7 @@ function initializePlanner() {
 
     if (plannerData[day]) {
       textarea.value = plannerData[day]
-      setTimeout(() => autoResize(textarea), 0)
+      setTimeout(() => autoResize(textarea), 50)
     }
 
     textarea.addEventListener('input', async (e) => {
