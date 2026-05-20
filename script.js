@@ -42,13 +42,27 @@ function updateGreeting() {
 // ============================================================
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
+    // Ta bort active från alla
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'))
+    
+    // Lägg till active på vald
     btn.classList.add('active')
     document.getElementById(btn.dataset.target).classList.add('active')
 
+    // Rendera chart om vi går till hälsa
     if (btn.dataset.target === 'tab-health') {
       renderWeightChart()
+    }
+
+    // --- FIXEN: Uppdatera höjden på textfälten när Idé-fliken öppnas ---
+    if (btn.dataset.target === 'tab-ideas') {
+      // En liten delay behövs ibland för att webbläsaren ska hinna rendera fliken innan vi mäter
+      setTimeout(() => {
+        document.querySelectorAll('#tab-ideas textarea').forEach(textarea => {
+          autoResize(textarea)
+        })
+      }, 10)
     }
   })
 })
