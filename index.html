@@ -79,34 +79,7 @@
     </div>
 
     <div id="tab-ideas" class="tab-content">
-      
-      <div class="idea-section">
-        <h2 class="section-title">DRAKENBERG</h2>
-        <div id="list-drakenberg"></div>
-        <div class="add-habit-container">
-          <input type="text" id="input-drakenberg" placeholder="Ny idé för Drakenberg...">
-          <button id="add-drakenberg-btn">+</button>
-        </div>
-      </div>
-
-      <div class="idea-section">
-        <h2 class="section-title">INES</h2>
-        <div id="list-ines"></div>
-        <div class="add-habit-container">
-          <input type="text" id="input-ines" placeholder="Ny idé för Ines...">
-          <button id="add-ines-btn">+</button>
-        </div>
-      </div>
-
-      <div class="idea-section">
-        <h2 class="section-title">ISK</h2>
-        <div id="list-isk"></div>
-        <div class="add-habit-container">
-          <input type="text" id="input-isk" placeholder="Ny idé för ISK...">
-          <button id="add-isk-btn">+</button>
-        </div>
-      </div>
-
+      <div id="ideas-container"></div>
     </div>
 
     <div id="tab-health" class="tab-content">
@@ -116,7 +89,7 @@
         <div class="chart-container">
           <canvas id="weightChart"></canvas>
         </div>
-        
+
         <div class="add-habit-container" style="margin-bottom: 24px;">
           <input type="number" id="new-weight-input" placeholder="Skriv in din vikt i kg (t.ex. 80.5)" step="0.1">
           <button id="add-weight-btn">+</button>
@@ -125,7 +98,7 @@
     </div>
 
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>
 </html>
