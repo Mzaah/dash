@@ -42,22 +42,16 @@ function updateGreeting() {
 // ============================================================
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    // Ta bort active från alla
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'))
-    
-    // Lägg till active på vald
     btn.classList.add('active')
     document.getElementById(btn.dataset.target).classList.add('active')
 
-    // Rendera chart om vi går till hälsa
     if (btn.dataset.target === 'tab-health') {
       renderWeightChart()
     }
 
-    // --- FIXEN: Uppdatera höjden på textfälten när Idé-fliken öppnas ---
     if (btn.dataset.target === 'tab-ideas') {
-      // En liten delay behövs ibland för att webbläsaren ska hinna rendera fliken innan vi mäter
       setTimeout(() => {
         document.querySelectorAll('#tab-ideas textarea').forEach(textarea => {
           autoResize(textarea)
@@ -476,6 +470,138 @@ function initializeIdeas() {
 }
 
 // ============================================================
+// SUPPLEMENT TRACKER
+// ============================================================
+let supplements = []
+let supplementLog = {}
+
+async function loadSupplements() {
+  const { data } = await db
+    .from('supplements')
+    .select('*')
+    .eq('user_id', USER_ID)
+    .maybeSingle()
+
+  if (data) {
+    supplements = data.supplements || []
+    supplementLog = data.log || {}
+  }
+
+  if (!supplementLog[todayStr]) {
+    supplementLog[todayStr] = []
+  }
+
+  renderSupplements()
+}
+
+async function saveSupplements() {
+  await db.from('supplements').upsert({
+    user_id: USER_ID,
+    supplements: supplements,
+    log: supplementLog,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'user_id' })
+}
+
+function getLast5Days() {
+  const days = []
+  for (let i = 4; i >= 0; i--) {
+    const d = new Date()
+    d.setDate(d.getDate() - i)
+    days.push(getLocalDayString(d))
+  }
+  return days
+}
+
+function renderSupplements() {
+  const container = document.getElementById('supplement-list')
+  container.innerHTML = ''
+
+  const last5 = getLast5Days()
+
+  supplements.forEach((supp, index) => {
+    const isTakenToday = supplementLog[todayStr]?.includes(supp)
+
+    const card = document.createElement('div')
+    card.className = 'supplement-card' + (isTakenToday ? ' taken' : ' not-taken')
+
+    // Vänster: namn + streak-cirklar på samma rad
+    const left = document.createElement('div')
+    left.className = 'supplement-left'
+
+    const name = document.createElement('span')
+    name.className = 'supplement-name'
+    name.textContent = supp
+
+    const streak = document.createElement('div')
+    streak.className = 'supplement-streak'
+
+    last5.forEach(dateStr => {
+      const dot = document.createElement('div')
+      const taken = supplementLog[dateStr]?.includes(supp)
+      dot.className = 'streak-dot' + (taken ? ' done' : '')
+      streak.appendChild(dot)
+    })
+
+    left.appendChild(name)
+    left.appendChild(streak)
+
+    // Höger: toggle + delete
+    const right = document.createElement('div')
+    right.className = 'supplement-right'
+
+    const toggle = document.createElement('button')
+    toggle.className = 'supplement-toggle' + (isTakenToday ? ' active' : '')
+    toggle.textContent = isTakenToday ? 'Tagen ✓' : 'Markera'
+    toggle.addEventListener('click', async () => {
+      if (supplementLog[todayStr].includes(supp)) {
+        supplementLog[todayStr] = supplementLog[todayStr].filter(s => s !== supp)
+      } else {
+        supplementLog[todayStr].push(supp)
+      }
+      await saveSupplements()
+      renderSupplements()
+    })
+
+    const delBtn = document.createElement('button')
+    delBtn.className = 'list-delete'
+    delBtn.textContent = '×'
+    delBtn.addEventListener('click', async () => {
+      supplements.splice(index, 1)
+      Object.keys(supplementLog).forEach(date => {
+        supplementLog[date] = supplementLog[date].filter(s => s !== supp)
+      })
+      await saveSupplements()
+      renderSupplements()
+    })
+
+    right.appendChild(toggle)
+    right.appendChild(delBtn)
+
+    card.appendChild(left)
+    card.appendChild(right)
+    container.appendChild(card)
+  })
+}
+
+document.getElementById('add-supplement-btn').addEventListener('click', addSupplement)
+document.getElementById('new-supplement-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addSupplement()
+})
+
+async function addSupplement() {
+  const input = document.getElementById('new-supplement-input')
+  const val = input.value.trim()
+  if (val && !supplements.includes(val)) {
+    supplements.push(val)
+    if (!supplementLog[todayStr]) supplementLog[todayStr] = []
+    await saveSupplements()
+    renderSupplements()
+    input.value = ''
+  }
+}
+
+// ============================================================
 // VIKT & HÄLSA
 // ============================================================
 let weightData = []
@@ -574,21 +700,12 @@ async function addWeight() {
 // ============================================================
 function setupRealtimeSync() {
   db.channel('dashboard-sync')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'habits', filter: `user_id=eq.${USER_ID}` }, () => {
-      loadHabitData()
-    })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'todos', filter: `user_id=eq.${USER_ID}` }, () => {
-      loadTodos()
-    })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'planner', filter: `user_id=eq.${USER_ID}` }, () => {
-      loadPlanner()
-    })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas', filter: `user_id=eq.${USER_ID}` }, () => {
-      loadIdeas()
-    })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'weight', filter: `user_id=eq.${USER_ID}` }, () => {
-      loadWeightData()
-    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'habits', filter: `user_id=eq.${USER_ID}` }, () => { loadHabitData() })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'todos', filter: `user_id=eq.${USER_ID}` }, () => { loadTodos() })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'planner', filter: `user_id=eq.${USER_ID}` }, () => { loadPlanner() })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas', filter: `user_id=eq.${USER_ID}` }, () => { loadIdeas() })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'weight', filter: `user_id=eq.${USER_ID}` }, () => { loadWeightData() })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'supplements', filter: `user_id=eq.${USER_ID}` }, () => { loadSupplements() })
     .subscribe()
 }
 
@@ -602,7 +719,8 @@ async function init() {
     loadTodos(),
     loadPlanner(),
     loadIdeas(),
-    loadWeightData()
+    loadWeightData(),
+    loadSupplements()
   ])
   setupRealtimeSync()
 }
