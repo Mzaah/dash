@@ -167,7 +167,7 @@ async function savePlannerDay(day, content) {
 
 function autoResize(textarea) {
   textarea.style.height = 'auto'
-  textarea.style.height = textarea.scrollHeight + 'px'
+  textarea.style.height = (textarea.scrollHeight + 2) + 'px'
 }
 
 function initializePlanner() {
