@@ -4,8 +4,8 @@
 const { createClient } = supabase
 
 const db = createClient(
-  'https://xlljzsodolwsqjjitevg.supabase.co',  // <-- byt ut
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsbGp6c29kb2x3c3Fqaml0ZXZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMzM1MzgsImV4cCI6MjA5NDgwOTUzOH0.rx7H11JYqUgi74ZVhEbGItu6jlIQE5MlWh0CxPRghlI'                   // <-- byt ut
+  'https://DITT-ID.supabase.co',
+  'DIN-ANON-KEY'
 )
 
 const USER_ID = 'liam'
@@ -64,7 +64,7 @@ async function loadTodos() {
     .select('*')
     .eq('user_id', USER_ID)
     .eq('date', todayStr)
-    .single()
+    .maybeSingle()
 
   todos = data?.todos || []
   renderTodos()
@@ -213,7 +213,7 @@ async function loadHabitData() {
     .from('habits')
     .select('*')
     .eq('user_id', USER_ID)
-    .single()
+    .maybeSingle()
 
   if (data) {
     habits = data.habits || ['Träning', 'Läsning']
@@ -392,7 +392,7 @@ function updateStats() {
 }
 
 // ============================================================
-// IDÉ & PROJEKT (Nu omgjort till fritextfält + "Annat")
+// IDÉ & PROJEKT
 // ============================================================
 const ideaCategories = [
   { id: 'drakenberg', label: 'DRAKENBERG' },
@@ -407,10 +407,10 @@ async function loadIdeas() {
     .from('ideas')
     .select('*')
     .eq('user_id', USER_ID)
-    .single()
+    .maybeSingle()
 
   if (data?.ideas) {
-    projectIdeas = data.ideas
+    projectIdeas = { drakenberg: '', ines: '', isk: '', annat: '', ...data.ideas }
   }
 
   initializeIdeas()
@@ -430,7 +430,7 @@ function initializeIdeas() {
 
   ideaCategories.forEach(cat => {
     const block = document.createElement('div')
-    block.className = 'day-block' // Använder samma stilrena mörka kort-design som veckoplaneraren
+    block.className = 'day-block'
 
     const title = document.createElement('h2')
     title.className = 'section-title'
@@ -441,17 +441,14 @@ function initializeIdeas() {
     textarea.placeholder = 'Skriv ner tankar, planer eller idéer...'
     textarea.setAttribute('rows', '1')
 
-    // Säkerhetsåtgärd: Om gammal data var sparad som en lista/array, slå ihop den till rader
     if (Array.isArray(projectIdeas[cat.id])) {
       textarea.value = projectIdeas[cat.id].join('\n')
     } else {
       textarea.value = projectIdeas[cat.id] || ''
     }
 
-    // Justera höjden direkt vid laddning
     setTimeout(() => autoResize(textarea), 0)
 
-    // Spara direkt vid inmatning
     textarea.addEventListener('input', async (e) => {
       autoResize(e.target)
       projectIdeas[cat.id] = e.target.value
@@ -475,7 +472,7 @@ async function loadWeightData() {
     .from('weight')
     .select('*')
     .eq('user_id', USER_ID)
-    .single()
+    .maybeSingle()
 
   if (data?.weight_data) {
     weightData = data.weight_data
@@ -559,7 +556,7 @@ async function addWeight() {
 }
 
 // ============================================================
-// REALTIDSSYNK — uppdaterar alla enheter live
+// REALTIDSSYNK
 // ============================================================
 function setupRealtimeSync() {
   db.channel('dashboard-sync')
