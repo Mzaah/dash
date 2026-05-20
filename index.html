@@ -7,27 +7,22 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-<!-- För iPhone/Android om du lägger till den på hemskärmen -->
-<link rel="apple-touch-icon" href="favicon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Dashboard">
-
+  <link rel="apple-touch-icon" href="favicon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Dashboard">
 </head>
 <body>
-
   <div class="notion-container">
-    
-    <h1 id="greeting-title" class="greeting-title"></h1>
 
+    <h1 id="greeting-title" class="greeting-title"></h1>
     <div class="tabs">
       <button class="tab-btn active" data-target="tab-dashboard">Dashboard</button>
       <button class="tab-btn" data-target="tab-ideas">Projekt & Idéer</button>
       <button class="tab-btn" data-target="tab-health">Hälsa</button>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
-      
       <div class="todo-section">
         <h2 class="section-title">DAGENS FOKUS</h2>
         <div id="todo-list"></div>
@@ -36,7 +31,6 @@
           <button id="add-todo-btn">+</button>
         </div>
       </div>
-
       <div class="habit-section">
         <h2 class="section-title">DAGLIGA HABITS</h2>
         <div id="habit-list"></div>
@@ -48,7 +42,6 @@
           <div id="heatmap" class="heatmap"></div>
         </div>
       </div>
-
       <div class="stats-section">
         <div class="stat-box">
           <span class="stat-value" id="streak-counter">0</span>
@@ -62,12 +55,10 @@
           </div>
         </div>
       </div>
-
       <div style="margin-top: 40px;">
         <h2 class="section-title" style="margin-bottom: 12px;">VECKOPLANERARE</h2>
         <div id="planner-container"></div>
       </div>
-
       <div class="prayer-section">
         <p>
           Vår Fader, du som är i himlen.<br>
@@ -85,25 +76,37 @@
       </div>
     </div>
 
+    <!-- PROJEKT & IDÉER -->
     <div id="tab-ideas" class="tab-content">
       <div id="ideas-container"></div>
     </div>
 
+    <!-- HÄLSA -->
     <div id="tab-health" class="tab-content">
+
+      <!-- VIKT (överst) -->
       <div class="idea-section">
         <h2 class="section-title">VIKTUTVECKLING</h2>
-
         <div class="chart-container">
           <canvas id="weightChart"></canvas>
         </div>
-
         <div class="add-habit-container" style="margin-bottom: 24px;">
           <input type="number" id="new-weight-input" placeholder="Skriv in din vikt i kg (t.ex. 80.5)" step="0.1">
           <button id="add-weight-btn">+</button>
         </div>
       </div>
-    </div>
 
+      <!-- SUPPLEMENTS (under vikt) -->
+      <div class="idea-section" style="margin-top: 40px;">
+        <h2 class="section-title">SUPPLEMENTS</h2>
+        <div id="supplement-list"></div>
+        <div class="add-habit-container" style="margin-top: 16px;">
+          <input type="text" id="new-supplement-input" placeholder="Lägg till supplement...">
+          <button id="add-supplement-btn">+</button>
+        </div>
+      </div>
+
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
