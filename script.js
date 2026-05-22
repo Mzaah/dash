@@ -38,8 +38,9 @@ function updateGreeting() {
 }
 
 // ============================================================
-// FLIKAR (TABS)
+// FLIKAR (TABS) OCH SUB-TABS
 // ============================================================
+// Huvud-flikar
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
@@ -57,6 +58,21 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
           autoResize(textarea)
         })
       }, 10)
+    }
+  })
+})
+
+// Sub-flikar (inuti Hälsa)
+document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'))
+    document.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'))
+    btn.classList.add('active')
+    document.getElementById(btn.dataset.target).classList.add('active')
+    
+    // Om man trycker tillbaka till översikt, rita om grafen
+    if (btn.dataset.target === 'health-oversikt') {
+      renderWeightChart()
     }
   })
 })
@@ -160,7 +176,6 @@ async function loadPlanner() {
       plannerData[row.day] = row.content
     })
   }
-
   initializePlanner()
 }
 
@@ -420,7 +435,6 @@ async function loadIdeas() {
   if (data?.ideas) {
     projectIdeas = { drakenberg: '', ines: '', isk: '', annat: '', ...data.ideas }
   }
-
   initializeIdeas()
 }
 
@@ -490,7 +504,6 @@ async function loadSupplements() {
   if (!supplementLog[todayStr]) {
     supplementLog[todayStr] = []
   }
-
   renderSupplements()
 }
 
@@ -516,7 +529,6 @@ function getLast5Days() {
 function renderSupplements() {
   const container = document.getElementById('supplement-list')
   container.innerHTML = ''
-
   const last5 = getLast5Days()
 
   supplements.forEach((supp, index) => {
@@ -525,7 +537,6 @@ function renderSupplements() {
     const card = document.createElement('div')
     card.className = 'supplement-card' + (isTakenToday ? ' taken' : ' not-taken')
 
-    // Vänster: namn + streak-cirklar på samma rad
     const left = document.createElement('div')
     left.className = 'supplement-left'
 
@@ -546,7 +557,6 @@ function renderSupplements() {
     left.appendChild(name)
     left.appendChild(streak)
 
-    // Höger: toggle + delete
     const right = document.createElement('div')
     right.className = 'supplement-right'
 
@@ -617,7 +627,6 @@ async function loadWeightData() {
   if (data?.weight_data) {
     weightData = data.weight_data
   }
-
   renderWeightChart()
 }
 
@@ -696,6 +705,130 @@ async function addWeight() {
 }
 
 // ============================================================
+// GYM & PROGRESSIVE OVERLOAD
+// ============================================================
+let gymExercises = []
+
+async function loadGymData() {
+  const { data } = await db
+    .from('gym')
+    .select('*')
+    .eq('user_id', USER_ID)
+    .maybeSingle()
+
+  if (data?.exercises) {
+    gymExercises = data.exercises
+  }
+  renderGym()
+}
+
+async function saveGymData() {
+  await db.from('gym').upsert({
+    user_id: USER_ID,
+    exercises: gymExercises,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'user_id' })
+}
+
+function renderGym() {
+  const list = document.getElementById('gym-list')
+  list.innerHTML = ''
+
+  // Sortera övningar i bokstavsordning (A-Ö)
+  gymExercises.sort((a, b) => a.name.localeCompare(b.name, 'sv'))
+
+  gymExercises.forEach((ex, index) => {
+    const card = document.createElement('div')
+    card.className = 'gym-card'
+
+    // Namnet
+    const name = document.createElement('div')
+    name.className = 'gym-name'
+    name.textContent = ex.name
+
+    // Behållare för inputs
+    const inputs = document.createElement('div')
+    inputs.className = 'gym-inputs'
+
+    // KG Input
+    const kgGroup = document.createElement('div')
+    kgGroup.className = 'gym-input-group'
+    
+    const kgInput = document.createElement('input')
+    kgInput.type = 'number'
+    kgInput.step = '0.5'
+    kgInput.value = ex.weight || ''
+    kgInput.placeholder = '-'
+    kgInput.addEventListener('change', async (e) => {
+      ex.weight = e.target.value
+      await saveGymData()
+    })
+    
+    const kgLabel = document.createElement('label')
+    kgLabel.textContent = 'kg'
+    
+    kgGroup.appendChild(kgInput)
+    kgGroup.appendChild(kgLabel)
+
+    // REPS Input
+    const repGroup = document.createElement('div')
+    repGroup.className = 'gym-input-group'
+    
+    const repInput = document.createElement('input')
+    repInput.type = 'number'
+    repInput.value = ex.reps || ''
+    repInput.placeholder = '-'
+    repInput.addEventListener('change', async (e) => {
+      ex.reps = e.target.value
+      await saveGymData()
+    })
+    
+    const repLabel = document.createElement('label')
+    repLabel.textContent = 'reps'
+    
+    repGroup.appendChild(repInput)
+    repGroup.appendChild(repLabel)
+
+    // Ta bort knapp
+    const delBtn = document.createElement('button')
+    delBtn.className = 'list-delete'
+    delBtn.textContent = '×'
+    delBtn.style.marginLeft = '8px'
+    delBtn.addEventListener('click', async () => {
+      gymExercises.splice(index, 1)
+      await saveGymData()
+      renderGym()
+    })
+
+    inputs.appendChild(kgGroup)
+    inputs.appendChild(repGroup)
+    inputs.appendChild(delBtn)
+
+    card.appendChild(name)
+    card.appendChild(inputs)
+    list.appendChild(card)
+  })
+}
+
+document.getElementById('add-exercise-btn').addEventListener('click', addExercise)
+document.getElementById('new-exercise-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addExercise()
+})
+
+async function addExercise() {
+  const input = document.getElementById('new-exercise-input')
+  const val = input.value.trim()
+  
+  // Lägg till om fältet inte är tomt och övningen inte redan finns
+  if (val && !gymExercises.find(e => e.name.toLowerCase() === val.toLowerCase())) {
+    gymExercises.push({ name: val, weight: '', reps: '' })
+    await saveGymData()
+    renderGym()
+    input.value = ''
+  }
+}
+
+// ============================================================
 // REALTIDSSYNK
 // ============================================================
 function setupRealtimeSync() {
@@ -706,6 +839,7 @@ function setupRealtimeSync() {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas', filter: `user_id=eq.${USER_ID}` }, () => { loadIdeas() })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'weight', filter: `user_id=eq.${USER_ID}` }, () => { loadWeightData() })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'supplements', filter: `user_id=eq.${USER_ID}` }, () => { loadSupplements() })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'gym', filter: `user_id=eq.${USER_ID}` }, () => { loadGymData() })
     .subscribe()
 }
 
@@ -720,7 +854,8 @@ async function init() {
     loadPlanner(),
     loadIdeas(),
     loadWeightData(),
-    loadSupplements()
+    loadSupplements(),
+    loadGymData() // Laddar din nya gym-tabell
   ])
   setupRealtimeSync()
 }
