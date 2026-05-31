@@ -40,7 +40,6 @@ function updateGreeting() {
 // ============================================================
 // FLIKAR (TABS) OCH SUB-TABS
 // ============================================================
-// Huvud-flikar
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
@@ -62,7 +61,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   })
 })
 
-// Sub-flikar (inuti Hälsa)
 document.querySelectorAll('.sub-tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'))
@@ -70,7 +68,6 @@ document.querySelectorAll('.sub-tab-btn').forEach(btn => {
     btn.classList.add('active')
     document.getElementById(btn.dataset.target).classList.add('active')
     
-    // Om man trycker tillbaka till översikt, rita om grafen
     if (btn.dataset.target === 'health-oversikt') {
       renderWeightChart()
     }
@@ -550,7 +547,8 @@ function renderSupplements() {
     last5.forEach(dateStr => {
       const dot = document.createElement('div')
       const taken = supplementLog[dateStr]?.includes(supp)
-      dot.className = 'streak-dot' + (taken ? ' done' : '')
+      // Fixat: Lägger till klassen 'missed' om supplementet inte tagits den dagen, för röd prick
+      dot.className = 'streak-dot' + (taken ? ' done' : ' missed')
       streak.appendChild(dot)
     })
 
@@ -705,7 +703,7 @@ async function addWeight() {
 }
 
 // ============================================================
-// GYM & PROGRESSIVE OVERLOAD
+// GYM & PROGRESSIVE OVERLOAD (Uppdaterad med Apple Swipe-to-delete)
 // ============================================================
 let gymExercises = []
 
@@ -738,6 +736,23 @@ function renderGym() {
   gymExercises.sort((a, b) => a.name.localeCompare(b.name, 'sv'))
 
   gymExercises.forEach((ex, index) => {
+    // Skapa en yttre container för swipe-effekten
+    const container = document.createElement('div')
+    container.className = 'gym-card-container'
+
+    // Raderaknapp som ligger under kortet (Apple-style)
+    const underlayDelete = document.createElement('div')
+    underlayDelete.className = 'gym-delete-underlay'
+    underlayDelete.textContent = 'Radera'
+    underlayDelete.addEventListener('click', async () => {
+      if (confirm(`Vill du ta bort övningen "${ex.name}"?`)) {
+        gymExercises.splice(index, 1)
+        await saveGymData()
+        renderGym()
+      }
+    })
+
+    // Själva kortet som man kan swipea på
     const card = document.createElement('div')
     card.className = 'gym-card'
 
@@ -789,24 +804,45 @@ function renderGym() {
     repGroup.appendChild(repInput)
     repGroup.appendChild(repLabel)
 
-    // Ta bort knapp
-    const delBtn = document.createElement('button')
-    delBtn.className = 'list-delete'
-    delBtn.textContent = '×'
-    delBtn.style.marginLeft = '8px'
-    delBtn.addEventListener('click', async () => {
-      gymExercises.splice(index, 1)
-      await saveGymData()
-      renderGym()
-    })
-
     inputs.appendChild(kgGroup)
     inputs.appendChild(repGroup)
-    inputs.appendChild(delBtn)
 
     card.appendChild(name)
     card.appendChild(inputs)
-    list.appendChild(card)
+
+    // Touch-event hantering för Swipe-to-delete
+    let touchStartX = 0
+    let touchStartY = 0
+
+    card.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX
+      touchStartY = e.touches[0].clientY
+    }, { passive: true })
+
+    card.addEventListener('touchend', e => {
+      const touchEndX = e.changedTouches[0].clientX
+      const touchEndY = e.changedTouches[0].clientY
+      const swipeDistanceX = touchStartX - touchEndX
+      const swipeDistanceY = Math.abs(touchStartY - touchEndY)
+
+      // Säkerställ att det huvudsakligen är en horisontell swipe
+      if (swipeDistanceY < 40) {
+        if (swipeDistanceX > 60) {
+          // Stäng alla andra eventuellt öppna kort först
+          document.querySelectorAll('.gym-card').forEach(c => {
+            if (c !== card) c.classList.remove('swiped')
+          })
+          card.classList.add('swiped')
+        } 
+        else if (swipeDistanceX < -60) {
+          card.classList.remove('swiped')
+        }
+      }
+    }, { passive: true })
+
+    container.appendChild(underlayDelete)
+    container.appendChild(card)
+    list.appendChild(container)
   })
 }
 
@@ -819,7 +855,6 @@ async function addExercise() {
   const input = document.getElementById('new-exercise-input')
   const val = input.value.trim()
   
-  // Lägg till om fältet inte är tomt och övningen inte redan finns
   if (val && !gymExercises.find(e => e.name.toLowerCase() === val.toLowerCase())) {
     gymExercises.push({ name: val, weight: '', reps: '' })
     await saveGymData()
@@ -855,7 +890,7 @@ async function init() {
     loadIdeas(),
     loadWeightData(),
     loadSupplements(),
-    loadGymData() // Laddar din nya gym-tabell
+    loadGymData()
   ])
   setupRealtimeSync()
 }
