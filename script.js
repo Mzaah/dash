@@ -547,7 +547,6 @@ function renderSupplements() {
     last5.forEach(dateStr => {
       const dot = document.createElement('div')
       const taken = supplementLog[dateStr]?.includes(supp)
-      // Fixat: Lägger till klassen 'missed' om supplementet inte tagits den dagen, för röd prick
       dot.className = 'streak-dot' + (taken ? ' done' : ' missed')
       streak.appendChild(dot)
     })
@@ -703,7 +702,7 @@ async function addWeight() {
 }
 
 // ============================================================
-// GYM & PROGRESSIVE OVERLOAD (Uppdaterad med Apple Swipe-to-delete)
+// GYM & PROGRESSIVE OVERLOAD
 // ============================================================
 let gymExercises = []
 
@@ -732,15 +731,12 @@ function renderGym() {
   const list = document.getElementById('gym-list')
   list.innerHTML = ''
 
-  // Sortera övningar i bokstavsordning (A-Ö)
   gymExercises.sort((a, b) => a.name.localeCompare(b.name, 'sv'))
 
   gymExercises.forEach((ex, index) => {
-    // Skapa en yttre container för swipe-effekten
     const container = document.createElement('div')
     container.className = 'gym-card-container'
 
-    // Raderaknapp som ligger under kortet (Apple-style)
     const underlayDelete = document.createElement('div')
     underlayDelete.className = 'gym-delete-underlay'
     underlayDelete.textContent = 'Radera'
@@ -752,20 +748,16 @@ function renderGym() {
       }
     })
 
-    // Själva kortet som man kan swipea på
     const card = document.createElement('div')
     card.className = 'gym-card'
 
-    // Namnet
     const name = document.createElement('div')
     name.className = 'gym-name'
     name.textContent = ex.name
 
-    // Behållare för inputs
     const inputs = document.createElement('div')
     inputs.className = 'gym-inputs'
 
-    // KG Input
     const kgGroup = document.createElement('div')
     kgGroup.className = 'gym-input-group'
     
@@ -785,7 +777,6 @@ function renderGym() {
     kgGroup.appendChild(kgInput)
     kgGroup.appendChild(kgLabel)
 
-    // REPS Input
     const repGroup = document.createElement('div')
     repGroup.className = 'gym-input-group'
     
@@ -810,7 +801,6 @@ function renderGym() {
     card.appendChild(name)
     card.appendChild(inputs)
 
-    // Touch-event hantering för Swipe-to-delete
     let touchStartX = 0
     let touchStartY = 0
 
@@ -825,10 +815,8 @@ function renderGym() {
       const swipeDistanceX = touchStartX - touchEndX
       const swipeDistanceY = Math.abs(touchStartY - touchEndY)
 
-      // Säkerställ att det huvudsakligen är en horisontell swipe
       if (swipeDistanceY < 40) {
         if (swipeDistanceX > 60) {
-          // Stäng alla andra eventuellt öppna kort först
           document.querySelectorAll('.gym-card').forEach(c => {
             if (c !== card) c.classList.remove('swiped')
           })
@@ -879,10 +867,35 @@ function setupRealtimeSync() {
 }
 
 // ============================================================
+// AUTOMATIC DAILY VERSE (ENGLISH API)
+// ============================================================
+async function loadDailyVerse() {
+  try {
+    const response = await fetch('https://labs.bible.org/api/?passage=votd&type=json');
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      const verse = data[0];
+      
+      // Ta bort <b>, </b> och andra oönskade HTML-taggar från API:et
+      const cleanText = verse.text.replace(/<[^>]+>/g, '').trim();
+      
+      document.getElementById('bible-text').innerText = `"${cleanText}"`;
+      document.getElementById('bible-reference').innerText = `— ${verse.bookname} ${verse.chapter}:${verse.verse}`;
+    }
+  } catch (error) {
+    console.error("Could not fetch daily verse:", error);
+    document.getElementById('bible-text').innerText = '"I can do all things through Christ who strengthens me."';
+    document.getElementById('bible-reference').innerText = "— Philippians 4:13";
+  }
+}
+
+// ============================================================
 // STARTA APPEN
 // ============================================================
 async function init() {
   updateGreeting()
+  loadDailyVerse()
   await Promise.all([
     loadHabitData(),
     loadTodos(),
