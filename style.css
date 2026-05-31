@@ -32,11 +32,12 @@ body {
 
 .notion-container { width: 100%; max-width: 650px; }
 
-/* DYNAMISK HÄLSNING (Uppdaterad med Claude Serif-stil) */
+/* DYNAMISK HÄLSNING (Uppdaterad med Claude Serif-stil och kursiv stil) */
 .greeting-title {
   font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
   font-size: 26px; font-weight: 600; color: var(--text-main);
   margin-bottom: 24px; letter-spacing: -0.5px;
+  font-style: italic;
 }
 
 /* FLIKAR (TABS) */
@@ -75,15 +76,16 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-/* RÄTTA TILL SERIF PÅ AVDEKNINGSTITLAR */
+/* RÄTTA TILL SERIF PÅ AVDEKNINGSTITLAR OCH KURSIV STIL */
 .section-title {
   font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
   font-size: 11px; font-weight: 600; color: var(--accent-orange); 
   letter-spacing: 2px; margin-bottom: 18px; text-transform: uppercase;
   display: flex; align-items: center; gap: 6px;
+  font-style: italic;
 }
 
-/* VECKOPLANERAREN */
+/* VECKOPLANERAREN OCH DAGAR MED KURSIV STIL */
 .day-block {
   background-color: var(--card-bg); margin-bottom: 14px; padding: 16px;
   border-radius: var(--radius-md); border: 1px solid var(--border-color);
@@ -91,6 +93,7 @@ body {
 .day-title { 
   font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
   font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; 
+  font-style: italic;
 }
 
 textarea {
@@ -162,7 +165,7 @@ textarea::placeholder { color: var(--text-muted); }
 .prayer-section { margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.9; font-style: italic; padding-bottom: 60px; letter-spacing: 0.2px; }
 
 /* ============================================================
-   SUPPLEMENTS (Uppdaterad med röd prick för missade dagar)
+   SUPPLEMENTS
    ============================================================ */
 .supplement-card {
   background: var(--card-bg); border: 1px solid var(--border-color);
@@ -178,7 +181,6 @@ textarea::placeholder { color: var(--text-muted); }
 .supplement-streak { display: flex; gap: 5px; align-items: center; }
 .streak-dot { width: 10px; height: 10px; border-radius: 50%; background: #2c2927; border: 1px solid #3a3633; flex-shrink: 0; }
 .streak-dot.done { background: #3dd68c; border-color: #3dd68c; }
-/* Nya regler för röda prickar vid missat supplement */
 .streak-dot.missed { background: #ff5252; border-color: #ff5252; }
 
 .supplement-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -195,7 +197,6 @@ textarea::placeholder { color: var(--text-muted); }
   margin-bottom: 8px;
 }
 
-/* Radereringsknappen som ligger gömd under kortet */
 .gym-delete-underlay {
   position: absolute;
   top: 0;
@@ -229,7 +230,6 @@ textarea::placeholder { color: var(--text-muted); }
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* När kortet har swipeats till vänster */
 .gym-card.swiped {
   transform: translateX(-80px);
 }
@@ -263,7 +263,6 @@ textarea::placeholder { color: var(--text-muted); }
   font-weight: 500;
 }
 
-/* Mycket mer kompakta sifferlådor för kg/reps för att ge plats åt övningsnamnet */
 .gym-input-group input {
   width: 40px;
   background-color: #131211;
