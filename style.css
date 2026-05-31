@@ -32,9 +32,10 @@ body {
 
 .notion-container { width: 100%; max-width: 650px; }
 
-/* DYNAMISK HÄLSNING */
+/* DYNAMISK HÄLSNING (Uppdaterad med Claude Serif-stil) */
 .greeting-title {
-  font-size: 26px; font-weight: 700; color: var(--text-main);
+  font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  font-size: 26px; font-weight: 600; color: var(--text-main);
   margin-bottom: 24px; letter-spacing: -0.5px;
 }
 
@@ -74,9 +75,11 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+/* RÄTTA TILL SERIF PÅ AVDEKNINGSTITLAR */
 .section-title {
-  font-size: 11px; font-weight: 700; color: var(--accent-orange); 
-  letter-spacing: 1.5px; margin-bottom: 18px; text-transform: uppercase;
+  font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  font-size: 11px; font-weight: 600; color: var(--accent-orange); 
+  letter-spacing: 2px; margin-bottom: 18px; text-transform: uppercase;
   display: flex; align-items: center; gap: 6px;
 }
 
@@ -85,7 +88,10 @@ body {
   background-color: var(--card-bg); margin-bottom: 14px; padding: 16px;
   border-radius: var(--radius-md); border: 1px solid var(--border-color);
 }
-.day-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+.day-title { 
+  font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; 
+}
 
 textarea {
   width: 100%; min-height: 28px; background-color: transparent; border: none;
@@ -156,7 +162,7 @@ textarea::placeholder { color: var(--text-muted); }
 .prayer-section { margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.9; font-style: italic; padding-bottom: 60px; letter-spacing: 0.2px; }
 
 /* ============================================================
-   SUPPLEMENTS
+   SUPPLEMENTS (Uppdaterad med röd prick för missade dagar)
    ============================================================ */
 .supplement-card {
   background: var(--card-bg); border: 1px solid var(--border-color);
@@ -172,23 +178,60 @@ textarea::placeholder { color: var(--text-muted); }
 .supplement-streak { display: flex; gap: 5px; align-items: center; }
 .streak-dot { width: 10px; height: 10px; border-radius: 50%; background: #2c2927; border: 1px solid #3a3633; flex-shrink: 0; }
 .streak-dot.done { background: #3dd68c; border-color: #3dd68c; }
+/* Nya regler för röda prickar vid missat supplement */
+.streak-dot.missed { background: #ff5252; border-color: #ff5252; }
+
 .supplement-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .supplement-toggle { font-size: 12px; padding: 5px 12px; border-radius: 99px; border: 1px solid #3a3633; background: transparent; color: #8e8a86; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
 .supplement-toggle.active { background: rgba(61, 214, 140, 0.12); border-color: #3dd68c; color: #3dd68c; }
 
 /* ============================================================
-   GYM & PROGRESSIVE OVERLOAD
+   GYM & PROGRESSIVE OVERLOAD (Swipe + Kompaktare Sifferlådor)
    ============================================================ */
+.gym-card-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+/* Radereringsknappen som ligger gömd under kortet */
+.gym-delete-underlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80px;
+  background-color: #ff5252;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0 12px 12px 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
 .gym-card {
+  position: relative;
+  z-index: 2;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 12px 16px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* När kortet har swipeats till vänster */
+.gym-card.swiped {
+  transform: translateX(-80px);
 }
 
 .gym-name {
@@ -199,35 +242,37 @@ textarea::placeholder { color: var(--text-muted); }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-right: 8px;
 }
 
 .gym-inputs {
   display: flex;
-  gap: 12px;
+  gap: 6px;
   align-items: center;
 }
 
 .gym-input-group {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .gym-input-group label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   font-weight: 500;
 }
 
+/* Mycket mer kompakta sifferlådor för kg/reps för att ge plats åt övningsnamnet */
 .gym-input-group input {
-  width: 55px;
+  width: 40px;
   background-color: #131211;
   border: 1px solid #3a3633;
   color: var(--text-main);
-  padding: 6px 4px;
+  padding: 6px 2px;
   border-radius: 6px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
   transition: border-color 0.2s;
 }
