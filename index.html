@@ -19,13 +19,13 @@
 
     <div class="tabs">
       <button class="tab-btn active" data-target="tab-dashboard">Dashboard</button>
+      <button class="tab-btn" data-target="tab-todo">To-Do</button>
       <button class="tab-btn" data-target="tab-ideas">Projekt & Idéer</button>
       <button class="tab-btn" data-target="tab-health">Hälsa</button>
     </div>
 
     <div id="tab-dashboard" class="tab-content active">
       
-      <!-- AUTOMATIC BIBLE VERSE OF THE DAY -->
       <div class="idea-section" style="margin-bottom: 24px;">
         <div id="bible-quote-container" style="background: var(--card-bg); border-left: 3px solid var(--accent-green); padding: 16px; border-radius: var(--radius-md);">
           <p id="bible-text" style="font-size: 15px; color: var(--text-main); line-height: 1.6; margin-bottom: 6px; font-style: italic;">Loading verse of the day...</p>
@@ -33,28 +33,17 @@
         </div>
       </div>
 
-      <div class="todo-section">
-        <h2 class="section-title">DAGENS FOKUS</h2>
-        <div id="todo-list"></div>
-        <div class="add-habit-container" style="margin-bottom: 40px;">
-          <input type="text" id="new-todo-input" placeholder="Vad behöver göras idag?">
-          <button id="add-todo-btn">+</button>
-        </div>
-      </div>
-
-      <div class="habit-section">
-        <h2 class="section-title">DAGLIGA HABITS</h2>
-        <div id="habit-list"></div>
-        <div class="add-habit-container">
-          <input type="text" id="new-habit-input" placeholder="Lägg till habit...">
-          <button id="add-habit-btn">+</button>
-        </div>
-        <div class="heatmap-wrapper">
-          <div id="heatmap" class="heatmap"></div>
-        </div>
-      </div>
-
       <div class="stats-section">
+        <div class="stat-box circle-stat-box">
+          <div class="progress-circle-container">
+            <svg class="progress-ring" width="80" height="80">
+              <circle class="progress-ring-bg" cx="40" cy="40" r="34"></circle>
+              <circle class="progress-ring-fill" id="habit-progress-circle" cx="40" cy="40" r="34"></circle>
+            </svg>
+            <div class="progress-circle-text" id="habit-progress-text">0%</div>
+          </div>
+          <span class="stat-label" style="margin-bottom:0; margin-top:8px;">Dagens Habits</span>
+        </div>
         <div class="stat-box">
           <span class="stat-value" id="streak-counter">0</span>
           <span class="stat-label">Dagar i rad (Streak)</span>
@@ -66,6 +55,27 @@
             <div class="progress-bar-fill" id="year-progress-fill"></div>
           </div>
         </div>
+      </div>
+
+      <div class="todo-section" style="margin-top: 40px;">
+        <h2 class="section-title">DAGENS FOKUS</h2>
+        <div id="dashboard-todo-list"></div>
+      </div>
+
+<div class="habit-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2 class="section-title" style="margin-bottom: 0;">DAGLIGA HABITS</h2>
+          <button id="toggle-category-btn" class="header-plus-btn">+</button>
+        </div>
+
+        <div id="new-category-wrapper" class="hidden-wrapper">
+          <div class="add-habit-container" style="margin-top: 0; margin-bottom: 16px;">
+            <input type="text" id="new-category-input" placeholder="Ny habit-kategori...">
+            <button id="add-category-btn">+</button>
+          </div>
+        </div>
+
+        <div id="habit-categories-container"></div>
       </div>
 
       <div style="margin-top: 40px;">
@@ -90,12 +100,22 @@
       </div>
     </div>
 
+    <div id="tab-todo" class="tab-content">
+      <div class="idea-section">
+        <h2 class="section-title">ALLA UPPGIFTER</h2>
+        <div id="global-todo-list"></div>
+        <div class="add-habit-container" style="margin-top: 24px;">
+          <input type="text" id="new-global-todo-input" placeholder="Vad behöver göras framöver?">
+          <button id="add-global-todo-btn">+</button>
+        </div>
+      </div>
+    </div>
+
     <div id="tab-ideas" class="tab-content">
       <div id="ideas-container"></div>
     </div>
 
     <div id="tab-health" class="tab-content">
-
       <div class="sub-tabs">
         <button class="sub-tab-btn active" data-target="health-oversikt">Översikt</button>
         <button class="sub-tab-btn" data-target="health-gym">Gym</button>
@@ -133,7 +153,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
   </div>
