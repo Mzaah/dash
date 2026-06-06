@@ -689,19 +689,44 @@ async function saveWeightData() { await db.from('weight').upsert({ user_id: USER
 function renderWeightChart() {
   const ctx = document.getElementById('weightChart').getContext('2d')
   if (weightChartInstance) weightChartInstance.destroy()
+  
   Chart.defaults.color = '#8e8a86'
   Chart.defaults.font.family = 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
+  
   weightChartInstance = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: weightData.map(d => d.date),
       datasets: [{
-        label: 'Vikt (kg)', data: weightData.map(d => d.weight),
+        label: 'Vikt (kg)', 
+        // Vi parar ihop x (datum) och y (vikt) här istället:
+        data: weightData.map(d => ({ x: d.date, y: d.weight })),
         borderColor: '#3dd68c', backgroundColor: 'rgba(61, 214, 140, 0.1)', borderWidth: 2,
         pointBackgroundColor: '#1c1a19', pointBorderColor: '#3dd68c', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.3
       }]
     },
-    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false, grid: { color: '#2c2927' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
+    options: { 
+      responsive: true, 
+      maintainAspectRatio: false, 
+      scales: { 
+        y: { 
+          beginAtZero: false, 
+          grid: { color: '#2c2927' } 
+        }, 
+        x: { 
+          type: 'time', // <-- DETTA ÄR MAGIN
+          time: {
+            unit: 'day',
+            displayFormats: {
+              day: 'd MMM' // Visar typ "6 jun" i grafen, snyggt och cleant
+            }
+          },
+          grid: { display: false } 
+        } 
+      }, 
+      plugins: { 
+        legend: { display: false } 
+      } 
+    }
   })
 }
 
